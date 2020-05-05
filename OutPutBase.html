@@ -1,0 +1,73 @@
+{% extends "index.html" %}
+{% block table %}
+{% set tabletype = ['TA','TB','TC'] %}
+<!-- ######  truth table  ####### --> 
+<table class="table table-sm table-bordered">
+	<tr>
+		<th rowspan="2" colspan="3" style = "vertical-align: middle;">Present State</th>
+		<th rowspan="2" colspan="3" style = "vertical-align: middle;">Next State</th>
+		<th rowspan="2" colspan="3" style = "vertical-align: middle;">Flip Flop</th>
+	</tr>
+	<tbody>
+			<tr>
+				<th>A</th>
+				<th>B</th>
+				<th>C</th>
+				<th>A+1</th>
+				<th>B+1</th>
+				<th>C+1</th>
+				<th> {{tabletype[0]}} </th>
+				<th> {{tabletype[1]}} </th>
+				<th> {{tabletype[2]}} </th>
+				
+			</tr>
+		{%for i in range(8)%}
+			<tr>
+				<td>{{ bin[loop.index0*3+0]}}</td>
+				<td>{{ bin[loop.index0*3+1]}}</td>
+				<td>{{ bin[loop.index0*3+2]}}</td>
+				<td>{{next_state[loop.index0*3+0]}}</td>
+				<td>{{next_state[loop.index0*3+1]}}</td>
+				<td>{{next_state[loop.index0*3+2]}}</td>
+				<td>{{T_data[loop.index0*3+0]}}</td>
+				<td>{{T_data[loop.index0*3+1]}}</td>
+				<td>{{T_data[loop.index0*3+2]}}</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+
+<!-- ######  KMAP  ####### --> 
+<p></p>
+{%for i in range(3)%}
+<p>{{tabletype[loop.index0]}}</p>
+<table class="table table-sm table-bordered">
+	<tr>
+		<td></td>
+		<th><SPAN STYLE="text-decoration:overline">BC</SPAN></th>
+		<th ><SPAN STYLE="text-decoration:overline">B</SPAN>C</th>
+		<th >BC</th>
+		<th >B<SPAN STYLE="text-decoration:overline">C</SPAN></th>
+	</tr>
+	<tbody>
+		<tr>
+			<th><SPAN STYLE="text-decoration:overline">A</SPAN></th>
+			<td>{{T_data[0+loop.index0]}}</td>
+			<td>{{T_data[3+loop.index0]}}</td>
+			<td>{{T_data[9+loop.index0]}}</td>
+			<td>{{T_data[6+loop.index0]}}</td>
+		</tr>
+		<tr>
+			<th>A</th>
+			<td>{{T_data[12+loop.index0]}}</td>
+			<td>{{T_data[15+loop.index0]}}</td>
+			<td>{{T_data[21+loop.index0]}}</td>
+			<td>{{T_data[18+loop.index0]}}</td>
+		</tr>
+	</tbody>
+</table>
+{% endfor %}
+<!-- ######  EQUATION  ####### --> 
+
+<p>{{tabletype[0]}} = {{eqA}}</p>
+{% endblock %}
