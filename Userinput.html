@@ -1,49 +1,51 @@
 {% extends "index.html" %}
 {% block table %}
+{% set Variables = ['A','B','C','D','E','F'] %}
+{%set num = 3%}
 <p></p>
 <p></p>
 <form action="#" method="post">
 <table class="table table-sm table-bordered">
 <tbody>
 	<tr>
-		<th rowspan="2" colspan="3" style = "vertical-align: middle;">Present State</th>
-		<th colspan="6" >Next State</th>
-		<th rowspan="2" colspan="3" style = "vertical-align: middle;">Flip Flop</th>
+		<th rowspan="2" colspan="{{num}}" style = "vertical-align: middle;">Present State</th>
+		<th colspan="{{num*2}}" >Next State</th>
+		<th rowspan="2" colspan="{{num}}" style = "vertical-align: middle;">Flip Flop</th>
 	</tr>
 	<div class="checkbox">	
 		<tr>
-			<td colspan="2" >A+1</td>
-			<td colspan="2" >B+1</td>
-			<td colspan="2" >C+1</td> 		
+			{%for i in range(num)%}
+			<td colspan="2" >{{Variables[i]}}+1</td>
+			{%endfor%}		
 		</tr>
 		<tr>
-			<td>A</td> 
-			<td>B</td>
-			<td>C</td>
-			<td>1</td>
-			<td>0</td>
-			<td>1</td>
-			<td>0</td>
-			<td>1</td>
-			<td>0</td>
-			<td></td><td></td><td></td>			
+			{%for i in range(num)%}
+				<td>{{Variables[i]}}</td>
+			{%endfor%}
+			{%for i in range(num)%}	
+				<td>1</td>
+				<td>0</td>
+			{%endfor%}	
+			{%for i in range(num)%}
+			<td></td>
+			{%endfor%}	
 		</tr>
-		{%for i in range(8)%}
 		<tr>
-			<td>{{ bin[loop.index0*3+0]}}</td>
-			<td>{{ bin[loop.index0*3+1]}}</td>
-			<td>{{ bin[loop.index0*3+2]}}</td>
-			<td><input type="radio" name={{input_variables[loop.index0*3+0]}} value="1" ></td>
-			<td><input type="radio" name={{input_variables[loop.index0*3+0]}} value="0" checked="checked"></td>
-			<td><input type="radio" name={{input_variables[loop.index0*3+1]}} value="1" ></td>
-			<td><input type="radio" name={{input_variables[loop.index0*3+1]}} value="0" checked="checked"></td>
-			<td><input type="radio" name={{input_variables[loop.index0*3+2]}} value="1" ></td>
-			<td><input type="radio" name={{input_variables[loop.index0*3+2]}} value="0" checked="checked"></td>
+		{%for j in range(2**num)%}
+			{% set outerloop = loop %}
+			{%for i in range(num)%}
+				<td>{{ bin[loop.index0 + outerloop.index0*4 +(4-num)]}}</td>
+			{%endfor%}
+			{%for i in range(num)%}
+			<td><input type="radio" name={{input_variables[outerloop.index0*4+loop.index0]}} value="1" ></td>
+			<td><input type="radio" name={{input_variables[outerloop.index0*4+loop.index0]}} value="0" checked="checked"></td>
+			{% endfor %}
+			{%for i in range(num)%}
 			<td></td>
-			<td></td>
-			<td></td>			
+			{% endfor %}		
 		</tr>
-		{% endfor %}
+		{% endfor %}	
+		
 </table>
 <p><input type="submit" value="submit"/></p>
 </form

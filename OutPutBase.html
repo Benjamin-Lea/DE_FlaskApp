@@ -1,37 +1,39 @@
 {% extends "index.html" %}
 {% block table %}
-{% set tabletype = ['TA','TB','TC'] %}
+{% set tabletype = ['TA','TB','TC','TD'] %}
+{% set Variables = ['A','B','C','D'] %}
+{%set num = 3%}
 <!-- ######  truth table  ####### --> 
 <table class="table table-sm table-bordered">
-	<tr>
-		<th rowspan="2" colspan="3" style = "vertical-align: middle;">Present State</th>
-		<th rowspan="2" colspan="3" style = "vertical-align: middle;">Next State</th>
-		<th rowspan="2" colspan="3" style = "vertical-align: middle;">Flip Flop</th>
-	</tr>
 	<tbody>
+	<tr>
+		<th colspan="{{num}}">Present State</th>
+		<th colspan="{{num}}">Next State</th>
+		<th colspan="{{num}}">Flip Flop</th>
+	</tr>
+	<tr>
+		{%for i in range(num)%}
+		<td>{{Variables[i]}}</td>
+		{%endfor%}
+		{%for i in range(num)%}
+		<td>{{Variables[i]}}+1</td>
+		{%endfor%}		
+		{%for i in range(num)%}
+		<td> {{tabletype[i]}} </td>
+		{%endfor%}
+	</tr>
+		{%for i in range(2**num)%}
 			<tr>
-				<th>A</th>
-				<th>B</th>
-				<th>C</th>
-				<th>A+1</th>
-				<th>B+1</th>
-				<th>C+1</th>
-				<th> {{tabletype[0]}} </th>
-				<th> {{tabletype[1]}} </th>
-				<th> {{tabletype[2]}} </th>
-				
-			</tr>
-		{%for i in range(8)%}
-			<tr>
-				<td>{{ bin[loop.index0*3+0]}}</td>
-				<td>{{ bin[loop.index0*3+1]}}</td>
-				<td>{{ bin[loop.index0*3+2]}}</td>
-				<td>{{next_state[loop.index0*3+0]}}</td>
-				<td>{{next_state[loop.index0*3+1]}}</td>
-				<td>{{next_state[loop.index0*3+2]}}</td>
-				<td>{{T_data[loop.index0*3+0]}}</td>
-				<td>{{T_data[loop.index0*3+1]}}</td>
-				<td>{{T_data[loop.index0*3+2]}}</td>
+			{% set outerloop = loop %}
+			{%for i in range(num)%}
+				<td>{{ bin[loop.index0 + outerloop.index0*4 +(4-num)]}}</td>
+			{%endfor%}
+			{%for i in range(num)%}
+				<td>{{next_state[outerloop.index0*4+loop.index0]}}</td>
+			{% endfor %}
+			{%for i in range(num)%}
+				<td>{{T_data[outerloop.index0*4+loop.index0]}}</td>
+			{% endfor %}	
 			</tr>
 		{% endfor %}
 		</tbody>
@@ -39,7 +41,7 @@
 
 <!-- ######  KMAP  ####### --> 
 <p></p>
-{%for i in range(3)%}
+{%for i in range(num)%}
 <p>{{tabletype[loop.index0]}}</p>
 <table class="table table-sm table-bordered">
 	<tr>
@@ -69,5 +71,4 @@
 {% endfor %}
 <!-- ######  EQUATION  ####### --> 
 
-<p>{{tabletype[0]}} = {{eqA}}</p>
 {% endblock %}
