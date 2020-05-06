@@ -1,5 +1,5 @@
 from operator import xor
-def T_compair(T_data,binary,num):
+def T_compair(T_data,binary,num): 
 	T_data = list(map(int,T_data))
 	for i in range(2**num):
 		for j in range(num):

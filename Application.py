@@ -44,16 +44,17 @@ def index():
 @app.route("/Userinput", methods=["POST","GET"])
 def Userinput():
     if request.method == "POST":
-    	for i in range(2**num):
+        for i in range(2**num):
             for j in range(num):
                 user_input[4*i+j]=(request.form[input_variables[4*i+j]])
-                #user_input.append(request.form[input_variables[4*i+j]])
-    	T_data = fc.T_compair(user_input,binary,num)
-    	T_data = ''.join(str(i) for i in T_data)
-    	next_state = ''.join(str(i) for i in user_input)
-    	return redirect(url_for("T_Output",T_data = T_data,next_state=next_state))
+        mod_userinput=list(filter(None,user_input))
+        T_data = fc.T_compair(mod_userinput,binary,num)
+        T_data = ''.join(str(i) for i in T_data)
+        next_state = ''.join(str(i) for i in mod_userinput)
+        print(next_state)
+        return redirect(url_for("T_Output",T_data = T_data,next_state=next_state))
     else:
-    	return render_template("Userinput.html",input_variables=input_variables,bin=binary)
+        return render_template("Userinput.html",input_variables=input_variables,bin=binary)
 
 @app.route("/T_Output/<T_data>/<next_state>")
 def T_Output(T_data,next_state): 
@@ -80,3 +81,5 @@ def JK_Userinput():
 def JK_Output(JK_data,next_state):
     return render_template('JK_Output.html',JK_data = JK_data,
      next_state=next_state,bin=binary)
+
+#user_input.append(request.form[input_variables[4*i+j]])

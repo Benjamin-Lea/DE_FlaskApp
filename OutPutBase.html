@@ -29,10 +29,10 @@
 				<td>{{ bin[loop.index0 + outerloop.index0*4 +(4-num)]}}</td>
 			{%endfor%}
 			{%for i in range(num)%}
-				<td>{{next_state[outerloop.index0*4+loop.index0]}}</td>
+				<td>{{next_state[outerloop.index0*num+loop.index0]}}</td>
 			{% endfor %}
 			{%for i in range(num)%}
-				<td>{{T_data[outerloop.index0*4+loop.index0]}}</td>
+				<td>{{T_data[outerloop.index0*num+loop.index0]}}</td>
 			{% endfor %}	
 			</tr>
 		{% endfor %}
@@ -70,5 +70,5 @@
 </table>
 {% endfor %}
 <!-- ######  EQUATION  ####### --> 
-
+	
 {% endblock %}
