@@ -2,7 +2,6 @@
 {% block table %}
 {% set tabletype = ['TA','TB','TC','TD'] %}
 {% set Variables = ['A','B','C','D'] %}
-{%set num = 3%}
 <!-- ######  truth table  ####### --> 
 <table class="table table-sm table-bordered">
 	<tbody>
@@ -41,34 +40,111 @@
 
 <!-- ######  KMAP  ####### --> 
 <p></p>
-{%for i in range(num)%}
-<p>{{tabletype[loop.index0]}}</p>
-<table class="table table-sm table-bordered">
-	<tr>
-		<td></td>
-		<th><SPAN STYLE="text-decoration:overline">BC</SPAN></th>
-		<th ><SPAN STYLE="text-decoration:overline">B</SPAN>C</th>
-		<th >BC</th>
-		<th >B<SPAN STYLE="text-decoration:overline">C</SPAN></th>
-	</tr>
-	<tbody>
+{% if num==2 %}
+	{%for i in range(num)%}
+	<p>{{tabletype[loop.index0]}}</p>
+	<table class="table table-sm table-bordered">
 		<tr>
-			<th><SPAN STYLE="text-decoration:overline">A</SPAN></th>
-			<td>{{T_data[0+loop.index0]}}</td>
-			<td>{{T_data[3+loop.index0]}}</td>
-			<td>{{T_data[9+loop.index0]}}</td>
-			<td>{{T_data[6+loop.index0]}}</td>
+			<td></td>
+			<th><SPAN STYLE="text-decoration:overline">B</SPAN></th>
+			<th >B</th>
 		</tr>
+		<tbody>
+			<tr>
+				<th><SPAN STYLE="text-decoration:overline">A</SPAN></th>
+				<td>{{T_data[0+loop.index0]}}</td>
+				<td>{{T_data[2+loop.index0]}}</td>
+			</tr>
+			<tr>
+				<th>A</th>
+				<td>{{T_data[4+loop.index0]}}</td>
+				<td>{{T_data[6+loop.index0]}}</td>
+			</tr>
+		</tbody>
+	</table>
+	{% endfor %}
+{%endif%}
+{% if num==3 %}	
+	{%for i in range(num)%}
+	<p>{{tabletype[loop.index0]}}</p>
+	<table class="table table-sm table-bordered">
 		<tr>
-			<th>A</th>
-			<td>{{T_data[12+loop.index0]}}</td>
-			<td>{{T_data[15+loop.index0]}}</td>
-			<td>{{T_data[21+loop.index0]}}</td>
-			<td>{{T_data[18+loop.index0]}}</td>
+			<td></td>
+			<th><SPAN STYLE="text-decoration:overline">BC</SPAN></th>
+			<th ><SPAN STYLE="text-decoration:overline">B</SPAN>C</th>
+			<th >BC</th>
+			<th >B<SPAN STYLE="text-decoration:overline">C</SPAN></th>
 		</tr>
-	</tbody>
-</table>
-{% endfor %}
+		<tbody>
+			<tr>
+				<th><SPAN STYLE="text-decoration:overline">A</SPAN></th>
+				<td>{{T_data[0+loop.index0]}}</td>
+				<td>{{T_data[3+loop.index0]}}</td>
+				<td>{{T_data[9+loop.index0]}}</td>
+				<td>{{T_data[6+loop.index0]}}</td>
+			</tr>
+			<tr>
+				<th>A</th>
+				<td>{{T_data[12+loop.index0]}}</td>
+				<td>{{T_data[15+loop.index0]}}</td>
+				<td>{{T_data[21+loop.index0]}}</td>
+				<td>{{T_data[18+loop.index0]}}</td>
+			</tr>
+		</tbody>
+	</table>
+	{% endfor %}
+{%endif%}
+{% if num==4 %}	
+	{%for i in range(num)%}
+	<p>{{tabletype[loop.index0]}}</p>
+	<table class="table table-sm table-bordered">
+		<tr>
+			<td></td>
+			<th><SPAN STYLE="text-decoration:overline">CD</SPAN></th>
+			<th ><SPAN STYLE="text-decoration:overline">C</SPAN>D</th>
+			<th >CD</th>
+			<th >C<SPAN STYLE="text-decoration:overline">D</SPAN></th>
+		</tr>
+		<tbody>
+			<tr>
+				<th><SPAN STYLE="text-decoration:overline">AB</SPAN></th>
+				<td>{{T_data[0+loop.index0]}}</td>
+				<td>{{T_data[4+loop.index0]}}</td>
+				<td>{{T_data[12+loop.index0]}}</td>
+				<td>{{T_data[8+loop.index0]}}</td>
+			</tr>
+			<tr>
+				<th><SPAN STYLE="text-decoration:overline">A</SPAN>B</th>
+				<td>{{T_data[16+loop.index0]}}</td>
+				<td>{{T_data[20+loop.index0]}}</td>
+				<td>{{T_data[28+loop.index0]}}</td>
+				<td>{{T_data[24+loop.index0]}}</td>
+			</tr>
+			<tr>
+				<th><SPAN STYLE="text-decoration:overline"></SPAN>AB</th>
+				<td>{{T_data[32+loop.index0]}}</td>
+				<td>{{T_data[36+loop.index0]}}</td>
+				<td>{{T_data[44+loop.index0]}}</td>
+				<td>{{T_data[40+loop.index0]}}</td>
+			</tr>
+			<tr>
+				<th>A<SPAN STYLE="text-decoration:overline">B</SPAN></th>
+				<td>{{T_data[48+loop.index0]}}</td>
+				<td>{{T_data[52+loop.index0]}}</td>
+				<td>{{T_data[60+loop.index0]}}</td>
+				<td>{{T_data[56+loop.index0]}}</td>
+			</tr>
+		</tbody>
+	</table>
+	{% endfor %}
+{%endif%}
 <!-- ######  EQUATION  ####### --> 
-	
+<p>TA = {{eqA}}</p>
+<p>TB = {{eqB}}</p>
+{% if num>2 %}	
+<p>TC = {{eqC}}</p>
+{% endif %}
+{% if num>3%}	
+<p>TD = {{eqD}}</p>
+{%endif%}
 {% endblock %}

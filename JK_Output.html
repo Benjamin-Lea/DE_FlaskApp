@@ -1,39 +1,39 @@
 {% extends "index.html" %}
 {% block table %}
-{% set tabletype = ['AJ','AK','BJ','BK','CJ','CK'] %}
+{% set tabletype = ['AJ','AK','BJ','BK','CJ','CK','DJ','DK'] %}
+{% set Variables = ['A','B','C','D'] %}
 <!-- ######  truth table  ####### --> 
 <table class="table table-sm table-bordered">
 	<tr>
-		<th rowspan="2" colspan="3" style = "vertical-align: middle;">Present State</th>
-		<th rowspan="2" colspan="3" style = "vertical-align: middle;">Next State</th>
-		<th rowspan="2" colspan="6" style = "vertical-align: middle;">Flip Flop</th>
+		<th colspan="{{num}}">Present State</th>
+		<th colspan="{{num}}">Next State</th>
+		<th colspan="{{num*2}}">Flip Flop</th>
 	</tr>
 	<tbody>
+	<tr>
+		{%for i in range(num)%}
+		<td>{{Variables[i]}}</td>
+		{%endfor%}
+		{%for i in range(num)%}
+		<td>{{Variables[i]}}+1</td>
+		{%endfor%}		
+		{%for i in range(num*2)%}
+		<td> {{tabletype[i]}} </td>
+		{%endfor%}
+	</tr>
+		{%for i in range(2**num)%}
 			<tr>
-				<th>A</th>
-				<th>B</th>
-				<th>C</th>
-				<th>A+1</th>
-				<th>B+1</th>
-				<th>C+1</th>
-				{% for i in tabletype %}
-				<th> {{i}} </th>
-				{% endfor %}
-			</tr>
-		{%for i in range(8)%}
-			<tr>
-				<td>{{ bin[loop.index0*3+0]}}</td>
-				<td>{{ bin[loop.index0*3+1]}}</td>
-				<td>{{ bin[loop.index0*3+2]}}</td>
-				<td>{{next_state[loop.index0*3+0]}}</td>
-				<td>{{next_state[loop.index0*3+1]}}</td>
-				<td>{{next_state[loop.index0*3+2]}}</td>
-				<td>{{JK_data[loop.index0*3+0]}}</td>
-				<td>{{JK_data[loop.index0*3+1]}}</td>
-				<td>{{JK_data[loop.index0*3+2]}}</td>
-				<td>{{JK_data[loop.index0*3+24]}}</td>
-				<td>{{JK_data[loop.index0*3+25]}}</td>
-				<td>{{JK_data[loop.index0*3+26]}}</td>
+			{% set outerloop = loop %}
+			{%for i in range(num)%}
+				<td>{{ bin[loop.index0 + outerloop.index0*4 +(4-num)]}}</td>
+			{%endfor%}
+			{%for i in range(num)%}
+				<td>{{next_state[outerloop.index0*num+loop.index0]}}</td>
+			{% endfor %}
+			{%for i in range(num)%}
+				<td>{{JK_data[outerloop.index0*num+loop.index0]}}</td>
+				<td>{{JK_data[outerloop.index0*num+loop.index0+((2**num)*(num))]}}</td>
+			{% endfor %}	
 			</tr>
 		{% endfor %}
 		</tbody>
@@ -41,33 +41,185 @@
 
 <!-- ######  KMAP  ####### --> 
 <p></p>
-{%for i in range(6)%}
-<p>{{tabletype[loop.index0]}}</p>
-<table class="table table-sm table-bordered">
-	<tr>
-		<td></td>
-		<th><SPAN STYLE="text-decoration:overline">BC</SPAN></th>
-		<th ><SPAN STYLE="text-decoration:overline">B</SPAN>C</th>
-		<th >BC</th>
-		<th >B<SPAN STYLE="text-decoration:overline">C</SPAN></th>
-	</tr>
-	<tbody>
+{%for i in range(num)%}
+{% if num==2 %}
+	<p>{{tabletype[loop.index0*2]}}</p>
+	<table class="table table-sm table-bordered">
 		<tr>
-			<th><SPAN STYLE="text-decoration:overline">A</SPAN></th>
-			<td>{{JK_data[0+loop.index0]}}</td>
-			<td>{{JK_data[3+loop.index0]}}</td>
-			<td>{{JK_data[9+loop.index0]}}</td>
-			<td>{{JK_data[6+loop.index0]}}</td>
+			<td></td>
+			<th><SPAN STYLE="text-decoration:overline">B</SPAN></th>
+			<th >B</th>
 		</tr>
+		<tbody>
+			<tr>
+				<th><SPAN STYLE="text-decoration:overline">A</SPAN></th>
+				<td>{{JK_data[0+loop.index0]}}</td>
+				<td>{{JK_data[2+loop.index0]}}</td>
+			</tr>
+			<tr>
+				<th>A</th>
+				<td>{{JK_data[4+loop.index0]}}</td>
+				<td>{{JK_data[6+loop.index0]}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<p>{{tabletype[loop.index0*2+1]}}</p>
+	<table class="table table-sm table-bordered">
 		<tr>
-			<th>A</th>
-			<td>{{JK_data[12+loop.index0]}}</td>
-			<td>{{JK_data[15+loop.index0]}}</td>
-			<td>{{JK_data[21+loop.index0]}}</td>
-			<td>{{JK_data[18+loop.index0]}}</td>
+			<td></td>
+			<th><SPAN STYLE="text-decoration:overline">B</SPAN></th>
+			<th >B</th>
 		</tr>
-	</tbody>
-</table>
+		<tbody>
+			<tr>
+				<th><SPAN STYLE="text-decoration:overline">A</SPAN></th>
+				<td>{{JK_data[0+loop.index0+((2**num)*(num))]}}</td>
+				<td>{{JK_data[2+loop.index0+((2**num)*(num))]}}</td>
+			</tr>
+			<tr>
+				<th>A</th>
+				<td>{{JK_data[4+loop.index0+((2**num)*(num))]}}</td>
+				<td>{{JK_data[6+loop.index0+((2**num)*(num))]}}</td>
+			</tr>
+		</tbody>
+	</table>
+	{%endif%}
+	{% if num==3 %}	
+		<p>{{tabletype[loop.index0*2]}}</p>
+		<table class="table table-sm table-bordered">
+			<tr>
+				<td></td>
+				<th><SPAN STYLE="text-decoration:overline">BC</SPAN></th>
+				<th ><SPAN STYLE="text-decoration:overline">B</SPAN>C</th>
+				<th >BC</th>
+				<th >B<SPAN STYLE="text-decoration:overline">C</SPAN></th>
+			</tr>
+			<tbody>
+				<tr>
+					<th><SPAN STYLE="text-decoration:overline">A</SPAN></th>
+					<td>{{JK_data[0+loop.index0]}}</td>
+					<td>{{JK_data[3+loop.index0]}}</td>
+					<td>{{JK_data[9+loop.index0]}}</td>
+					<td>{{JK_data[6+loop.index0]}}</td>
+				</tr>
+				<tr>
+					<th>A</th>
+					<td>{{JK_data[12+loop.index0]}}</td>
+					<td>{{JK_data[15+loop.index0]}}</td>
+					<td>{{JK_data[21+loop.index0]}}</td>
+					<td>{{JK_data[18+loop.index0]}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>{{tabletype[loop.index0*2+1]}}</p>
+		<table class="table table-sm table-bordered">
+			<tr>
+				<td></td>
+				<th><SPAN STYLE="text-decoration:overline">BC</SPAN></th>
+				<th ><SPAN STYLE="text-decoration:overline">B</SPAN>C</th>
+				<th >BC</th>
+				<th >B<SPAN STYLE="text-decoration:overline">C</SPAN></th>
+			</tr>
+			<tbody>
+				<tr>
+					<th><SPAN STYLE="text-decoration:overline">A</SPAN></th>
+					<td>{{JK_data[0+loop.index0+((2**num)*(num))]}}</td>
+					<td>{{JK_data[3+loop.index0+((2**num)*(num))]}}</td>
+					<td>{{JK_data[9+loop.index0+((2**num)*(num))]}}</td>
+					<td>{{JK_data[6+loop.index0+((2**num)*(num))]}}</td>
+				</tr>
+				<tr>
+					<th>A</th>
+					<td>{{JK_data[12+loop.index0+((2**num)*(num))]}}</td>
+					<td>{{JK_data[15+loop.index0+((2**num)*(num))]}}</td>
+					<td>{{JK_data[21+loop.index0+((2**num)*(num))]}}</td>
+					<td>{{JK_data[18+loop.index0+((2**num)*(num))]}}</td>
+				</tr>
+			</tbody>
+		</table>
+	{%endif%}
+	{% if num==4 %}	
+		<p>{{tabletype[loop.index0*2]}}</p>
+		<table class="table table-sm table-bordered">
+			<tr>
+				<td></td>
+				<th><SPAN STYLE="text-decoration:overline">CD</SPAN></th>
+				<th ><SPAN STYLE="text-decoration:overline">C</SPAN>D</th>
+				<th >CD</th>
+				<th >C<SPAN STYLE="text-decoration:overline">D</SPAN></th>
+			</tr>
+			<tbody>
+				<tr>
+					<th><SPAN STYLE="text-decoration:overline">AB</SPAN></th>
+					<td>{{JK_data[0+loop.index0]}}</td>
+					<td>{{JK_data[4+loop.index0]}}</td>
+					<td>{{JK_data[12+loop.index0]}}</td>
+					<td>{{JK_data[8+loop.index0]}}</td>
+				</tr>
+				<tr>
+					<th><SPAN STYLE="text-decoration:overline">A</SPAN>B</th>
+					<td>{{JK_data[16+loop.index0]}}</td>
+					<td>{{JK_data[20+loop.index0]}}</td>
+					<td>{{JK_data[28+loop.index0]}}</td>
+					<td>{{JK_data[24+loop.index0]}}</td>
+				</tr>
+				<tr>
+					<th><SPAN STYLE="text-decoration:overline"></SPAN>AB</th>
+					<td>{{JK_data[32+loop.index0]}}</td>
+					<td>{{JK_data[36+loop.index0]}}</td>
+					<td>{{JK_data[44+loop.index0]}}</td>
+					<td>{{JK_data[40+loop.index0]}}</td>
+				</tr>
+				<tr>
+					<th>A<SPAN STYLE="text-decoration:overline">B</SPAN></th>
+					<td>{{JK_data[48+loop.index0]}}</td>
+					<td>{{JK_data[52+loop.index0]}}</td>
+					<td>{{JK_data[60+loop.index0]}}</td>
+					<td>{{JK_data[56+loop.index0]}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>{{tabletype[loop.index0*2+1]}}</p>
+		<table class="table table-sm table-bordered">
+			<tr>
+				<td></td>
+				<th><SPAN STYLE="text-decoration:overline">CD</SPAN></th>
+				<th ><SPAN STYLE="text-decoration:overline">C</SPAN>D</th>
+				<th >CD</th>
+				<th >C<SPAN STYLE="text-decoration:overline">D</SPAN></th>
+			</tr>
+			<tbody>
+				<tr>
+					<th><SPAN STYLE="text-decoration:overline">AB</SPAN></th>
+					<td>{{JK_data[0+loop.index0+((2**num)*(num))]}}</td>
+					<td>{{JK_data[4+loop.index0+((2**num)*(num))]}}</td>
+					<td>{{JK_data[12+loop.index0+((2**num)*(num))]}}</td>
+					<td>{{JK_data[8+loop.index0+((2**num)*(num))]}}</td>
+				</tr>
+				<tr>
+					<th><SPAN STYLE="text-decoration:overline">A</SPAN>B</th>
+					<td>{{JK_data[16+loop.index0+((2**num)*(num))]}}</td>
+					<td>{{JK_data[20+loop.index0+((2**num)*(num))]}}</td>
+					<td>{{JK_data[28+loop.index0+((2**num)*(num))]}}</td>
+					<td>{{JK_data[24+loop.index0+((2**num)*(num))]}}</td>
+				</tr>
+				<tr>
+					<th><SPAN STYLE="text-decoration:overline"></SPAN>AB</th>
+					<td>{{JK_data[32+loop.index0+((2**num)*(num))]}}</td>
+					<td>{{JK_data[36+loop.index0+((2**num)*(num))]}}</td>
+					<td>{{JK_data[44+loop.index0+((2**num)*(num))]}}</td>
+					<td>{{JK_data[40+loop.index0+((2**num)*(num))]}}</td>
+				</tr>
+				<tr>
+					<th>A<SPAN STYLE="text-decoration:overline">B</SPAN></th>
+					<td>{{JK_data[48+loop.index0+((2**num)*(num))]}}</td>
+					<td>{{JK_data[52+loop.index0+((2**num)*(num))]}}</td>
+					<td>{{JK_data[60+loop.index0+((2**num)*(num))]}}</td>
+					<td>{{JK_data[56+loop.index0+((2**num)*(num))]}}</td>
+				</tr>
+			</tbody>
+		</table>
+	{%endif%}
 {% endfor %}
 <!-- ######  EQUATION  ####### --> 
 {% endblock %}

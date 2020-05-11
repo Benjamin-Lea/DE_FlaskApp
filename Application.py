@@ -18,8 +18,6 @@ input_variables = [ 'A0','B0','C0','D0',
                     'A13','B13','C13','D13',
                     'A14','B14','C14','D14',
                     'A15','B15','C15','D15']
-
-user_input = [None] *len(input_variables)
 #user_input = []
 binary = [0,0,0,0,
           0,0,0,1,
@@ -37,12 +35,29 @@ binary = [0,0,0,0,
           1,1,0,1,
           1,1,1,0,
           1,1,1,1] 
-num = 3
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/var2")
+def var2():
+    global num 
+    num = 2
+    return redirect(url_for("Userinput"))
+@app.route("/var3")
+def var3():
+    global num 
+    num = 3
+    return redirect(url_for("Userinput"))
+@app.route("/var4")
+def var4():
+    global num 
+    num = 4
+    return redirect(url_for("Userinput"))
+
 @app.route("/Userinput", methods=["POST","GET"])
 def Userinput():
+    user_input = [None] *len(input_variables)
     if request.method == "POST":
         for i in range(2**num):
             for j in range(num):
@@ -54,32 +69,58 @@ def Userinput():
         print(next_state)
         return redirect(url_for("T_Output",T_data = T_data,next_state=next_state))
     else:
-        return render_template("Userinput.html",input_variables=input_variables,bin=binary)
+        return render_template("Userinput.html",input_variables=input_variables,bin=binary,num=num)
 
 @app.route("/T_Output/<T_data>/<next_state>")
 def T_Output(T_data,next_state): 
-    #eqA= fc.Eq(T_data,0,binary,num)#Pass 0 for A , 1 for B and 2 for C
-    #eqB= fc.Eq(T_data,1,binary,num)
-    #eqC= fc.Eq(T_data,2,binary,num)
-    #eqD= fc.Eq(T_data,3,binary,num)
-    return render_template('OutPutBase.html', T_data = T_data,
-     next_state=next_state,bin=binary,eqA=1,eqB=2,eqC=3)
+    eqA= fc.Eq(T_data,0,binary,num)#Pass 0 for A , 1 for B and 2 for C
+    eqB= fc.Eq(T_data,1,binary,num)
+    if(num>2):
+        eqC= fc.Eq(T_data,2,binary,num)
+    else:
+        eqC=0
+    if(num>3):
+        eqD= fc.Eq(T_data,3,binary,num)
+    else:
+
+        eqD= 0
+    return render_template('OutPutBase.html',num=num, T_data = T_data,
+     next_state=next_state,bin=binary,eqA=eqA,eqB=eqB,eqC=eqC,eqD=eqD)
+
+@app.route("/JKvar2")
+def JKvar2():
+    global num 
+    num = 2
+    return redirect(url_for("JK_Userinput"))
+@app.route("/JKvar3")
+def JKvar3():
+    global num 
+    num = 3
+    return redirect(url_for("JK_Userinput"))
+@app.route("/JKvar4")
+def JKvar4():
+    global num 
+    num = 4
+    return redirect(url_for("JK_Userinput"))
 
 @app.route("/JK_Userinput", methods=["POST","GET"])
 def JK_Userinput():
+    user_input = [None] *len(input_variables)
     if request.method == "POST":
-        for i in range(len(input_variables)):
-            user_input[i]=(request.form[input_variables[i]])
-        JK_data = fc.JK_compair(user_input) #
+        for i in range(2**num):
+            for j in range(num):
+                user_input[4*i+j]=(request.form[input_variables[4*i+j]])
+        mod_userinput=list(filter(None,user_input))
+        JK_data = fc.JK_compair(mod_userinput,num) 
         JK_data = ''.join(str(i) for i in JK_data)
-        next_state = ''.join(str(i) for i in user_input)
-        return redirect(url_for("JK_Output", JK_data = JK_data, next_state=next_state))
+        next_state = ''.join(str(i) for i in mod_userinput)
+        return redirect(url_for("JK_Output", JK_data = JK_data, next_state=next_state, num=num))
     else:
-        return render_template("Userinput.html", input_variables=input_variables , bin = binary)
+        return render_template("Userinput.html", input_variables=input_variables , bin = binary,num=num)
 
 @app.route("/JK_Output/<JK_data>/<next_state>")
 def JK_Output(JK_data,next_state):
     return render_template('JK_Output.html',JK_data = JK_data,
-     next_state=next_state,bin=binary)
+     next_state=next_state,bin=binary,num=num)
 
 #user_input.append(request.form[input_variables[4*i+j]])
